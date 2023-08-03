@@ -21,6 +21,14 @@ module Keycloak
     yield @configuration ||= Keycloak::Configuration.new
   end
 
+  def self.configure_with_request(&block)
+    @configuration_block = block
+  end
+
+  def self.configuration_block
+    @configuration_block
+  end
+
   def self.config
     @configuration
   end
