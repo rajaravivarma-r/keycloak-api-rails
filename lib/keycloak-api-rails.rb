@@ -16,6 +16,14 @@ require_relative "keycloak-api-rails/middleware"
 require_relative "keycloak-api-rails/railtie" if defined?(Rails)
 
 module Keycloak
+  class MissingConfiguration < StandardError
+    def initialize
+      super(
+        'Keycloak.configure was never called. Perhaps, you meant to create ' \
+        'the service using Keycloak::ServiceFactor.from_env(env)?'
+      )
+    end
+  end
 
   def self.configure
     yield @configuration ||= Keycloak::Configuration.new
@@ -30,6 +38,8 @@ module Keycloak
   end
 
   def self.config
+    raise MissingConfiguration.new if @configuration.nil?
+
     @configuration
   end
 

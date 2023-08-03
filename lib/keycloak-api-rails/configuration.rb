@@ -17,5 +17,9 @@ module Keycloak
         Keycloak.configuration_block.call(config, request)
       end
     end
+
+    def key_resolver
+      self[:key_resolver] || PublicKeyCachedResolver
+    end
   end
 end
