@@ -25,7 +25,7 @@ _If both method are used at the same time, The query string as a higher priority
 
 By default, Keycloak-api-rails installs as a Rack Middleware. It processes all requests before any application logic. URIs/Paths can be excluded (opted-out) from this validation using the 'skip_paths' config option
 
-Alternatively, it can be configured to `opt-in` to validation. In this case, no Rack middleware is used, and controllers can request (opt-in) by including the module `Keycloak::authentication` and calling `keycloak_authenticate`, for example in a `before_action`, like so: 
+Alternatively, it can be configured to `opt-in` to validation. In this case, no Rack middleware is used, and controllers can request (opt-in) by including the module `Keycloak::authentication` and calling `keycloak_authenticate`, for example in a `before_action`, like so:
 
 ```ruby
 class MyApiController < ActionController::Base
@@ -62,7 +62,7 @@ All options have a default value. However, all of them can be changed in your in
 
 Create a `keycloak.rb` file in your Rails `config/initializers` folder. For instance:
 
-```
+```ruby
 Keycloak.configure do |config|
   config.server_url = ENV["KEYCLOAK_SERVER_URL"]
   config.realm_id   = ENV["KEYCLOAK_REALM_ID"]
@@ -85,7 +85,11 @@ Keycloak.configure do |config|
 end
 ```
 
-When using `opt-in` is true, `skip_paths` is not used. 
+TODO:
+* Add about `configure_with_request` method
+* Warn about using `configure_with_request` with ServiceFactory and `configure` with Keycloak.service
+
+When using `opt-in` is true, `skip_paths` is not used.
 
 ## Use cases
 
@@ -105,7 +109,7 @@ class AuthenticatedController < ApplicationController
 end
 ```
 
-Or if using opt-in mode, the controller can request validation conditionally: 
+Or if using opt-in mode, the controller can request validation conditionally:
 ```ruby
 class MostlyAuthenticatedController < ApplicationController
   include Keycloak::Authentication
@@ -117,7 +121,7 @@ class MostlyAuthenticatedController < ApplicationController
     User.active.find_by(keycloak_id: keycloak_id)
   end
 
-  def index 
+  def index
     # unauthenticated
   end
 end
